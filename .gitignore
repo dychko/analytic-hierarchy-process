@@ -1,0 +1,8 @@
+.idea
+out
+Results.txt
+model.lp
+analytic-hierarchy-process.iml
+src/Demo.java
+src/fuzzyGlobal
+src/fuzzyLocal/FuzzyTest.java
