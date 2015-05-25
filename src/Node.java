@@ -14,9 +14,12 @@ public class Node {
     private double consistencyIndex;
 
     /**
-     * 0 - w_L; 1 - w_M; 2 - w_U
+     * 0 - W_L, 1 - W_U
      */
     private ArrayList<Double> fuzzyGlobalWeight;
+    /**
+     * 0 - W_L; 1 - W_M; 2 - W_U
+     */
     private ArrayList<SimpleMatrix> fuzzyPairComparisons;
     private ArrayList<SimpleMatrix> fuzzyLocalWeights;
 

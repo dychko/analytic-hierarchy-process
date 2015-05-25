@@ -17,6 +17,11 @@ public class FuzzyDistributedSynthesis implements FuzzyGlobalWeightsAlg {
     private final int W_L = 0;
     private final int W_U = 1;
 
+    @Override
+    public String getName() {
+        return "Fuzzy distributed synthesis";
+    }
+
     /**
      * Computes fuzzy global weights for given elements and criteria fuzzy weights
      * @param weightsCriteria ArrayList {WC_L, WC_U}, where WC_L - vector of criteria weights (lower bound)

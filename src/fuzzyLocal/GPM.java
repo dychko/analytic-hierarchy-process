@@ -7,9 +7,17 @@ import org.ejml.simple.SimpleMatrix;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Class which implements Goal Programming Model method for computing fuzzy local weights
+ */
 public class GPM implements FuzzyLocalWeightsAlg {
     private int[] colNum;
     private double[] row;
+
+    @Override
+    public String getName() {
+        return "Goal Programming Model";
+    }
 
     @Override
     public ArrayList<SimpleMatrix> computeFuzzyLocal(ArrayList<SimpleMatrix> fuzzyPairComparisons) {

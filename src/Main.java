@@ -1,4 +1,7 @@
 import fuzzyGlobal.FuzzyDistributedSynthesis;
+import fuzzyGlobal.FuzzyGlobalWeightsAlg;
+import fuzzyLocal.FRGMM;
+import fuzzyLocal.FuzzyLocalWeightsAlg;
 import fuzzyLocal.GPM;
 import globalMethods.DistributedSynthesis;
 import globalMethods.GlobalWeightsAlg;
@@ -108,41 +111,50 @@ public class Main {
 
             }
         }
-//        writer.close();
 
-
+        
         // Fuzzy computations
-
 
         String pathFuzzy = "C:\\users\\admin\\desktop\\generated\\fuzzy\\full\\";
 
         loadFuzzyMatrices(pathFuzzy, mHierarchy);
 
-        mHierarchy.computeAllFuzzyLocalWeights(new GPM());
+        ArrayList<FuzzyLocalWeightsAlg> fuzzyLocalWeightsAlgs = new ArrayList<>();
+        fuzzyLocalWeightsAlgs.add(new GPM());
+        fuzzyLocalWeightsAlgs.add(new FRGMM());
 
-        writer.println("Fuzzy weights by GPM");
-        for (int i = 0; i < mHierarchy.getNumLayers() - 1; i++) {
-            for (int j = 0; j < mHierarchy.getNumElementsPerLayer(i); j++) {
-                ArrayList<SimpleMatrix> weights = mHierarchy.getFuzzyLocalWeights(i + 1, j);
-                writer.println("wL, (" + (i + 1) + "," + j + ")");
-                writer.println(weights.get(0));
-                writer.println("wM, (" + (i + 1) + "," + j + ")");
-                writer.println(weights.get(1));
-                writer.println("wU, (" + (i + 1) + "," + j + ")");
-                writer.println(weights.get(2));
+        ArrayList<FuzzyGlobalWeightsAlg> fuzzyGlobalWeightsAlgs = new ArrayList<>();
+        fuzzyGlobalWeightsAlgs.add(new FuzzyDistributedSynthesis());
+
+        for (FuzzyLocalWeightsAlg fuzzyLocalWeightsAlg : fuzzyLocalWeightsAlgs) {
+            mHierarchy.computeAllFuzzyLocalWeights(fuzzyLocalWeightsAlg);
+
+            writer.println(fuzzyLocalWeightsAlg.getName());
+            for (int i = 0; i < mHierarchy.getNumLayers() - 1; i++) {
+                for (int j = 0; j < mHierarchy.getNumElementsPerLayer(i); j++) {
+                    ArrayList<SimpleMatrix> weights = mHierarchy.getFuzzyLocalWeights(i + 1, j);
+                    writer.println("wL, (" + (i + 1) + "," + j + ")");
+                    writer.println(weights.get(0));
+                    writer.println("wM, (" + (i + 1) + "," + j + ")");
+                    writer.println(weights.get(1));
+                    writer.println("wU, (" + (i + 1) + "," + j + ")");
+                    writer.println(weights.get(2));
+                }
+            }
+            writer.println("Global weights");
+            for (FuzzyGlobalWeightsAlg fuzzyGlobalWeightsAlg : fuzzyGlobalWeightsAlgs) {
+                mHierarchy.computeAllFuzzyGlobalWeights(fuzzyGlobalWeightsAlg);
+
+                writer.println(fuzzyGlobalWeightsAlg.getName());
+                ArrayList<SimpleMatrix> fuzzyGlobalWeights = mHierarchy.getLayerFuzzyGlobalWeights(3);
+
+                writer.println("wL");
+                writer.println(fuzzyGlobalWeights.get(0));
+                writer.println("wU");
+                writer.println(fuzzyGlobalWeights.get(1));
+
             }
         }
-
-        writer.println("Fuzzy global weights");
-        writer.println("Fuzzy Distributed synthesis");
-
-        mHierarchy.computeAllFuzzyGlobalWeights(new FuzzyDistributedSynthesis());
-
-        ArrayList<SimpleMatrix> fuzzyGlobalWeights = mHierarchy.getLayerFuzzyGlobalWeights(3);
-        writer.println("wL");
-        writer.println(fuzzyGlobalWeights.get(0));
-        writer.println("wU");
-        writer.println(fuzzyGlobalWeights.get(1));
 
         writer.close();
 
