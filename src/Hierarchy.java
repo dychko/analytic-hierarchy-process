@@ -1,3 +1,4 @@
+import fuzzyGlobal.FuzzyGlobalWeightsAlg;
 import fuzzyLocal.FuzzyLocalWeightsAlg;
 import globalMethods.GlobalWeightsAlg;
 import localMethods.LocalWeightsAlg;
@@ -210,6 +211,87 @@ public class Hierarchy {
         }
         return global;
     }
+
+    public void computeAllFuzzyGlobalWeights(FuzzyGlobalWeightsAlg fuzzyGlobalWeightsAlg) {
+        // Check if all local fuzzy weights vectors are present
+        for (int i = 0; i < hStructure.size() - 1; i++) {
+            for (Node node : hStructure.get(i)) {
+                if (node.getFuzzyLocalWeights() == null) {
+                    throw new NullPointerException("Null vector of fuzzy local weights in structure");
+                }
+            }
+        }
+
+        final int W_L = 0;
+        final int W_U = 1;
+
+        // Set global fuzzy weight for goal = [1,1,1]
+        hStructure.get(0).get(0).setFuzzyGlobalWeight(1, 1);
+
+        if (hStructure.size() == 1) {
+            return;
+        }
+
+        // Set global fuzzy weights for layer 1 (if exist) the same as local fuzzy weights
+        ArrayList<Node> layer1 = hStructure.get(1);
+        for (int i = 0; i < layer1.size(); i++) {
+            double globWeightL = hStructure.get(0).get(0).getFuzzyLocalWeights().get(W_L).get(i);
+            double globWeightU = hStructure.get(0).get(0).getFuzzyLocalWeights().get(W_U).get(i);
+            layer1.get(i).setFuzzyGlobalWeight(globWeightL, globWeightU);
+        }
+
+        // Set global fuzzy weights for following layers by given algorithm
+        for (int i = 1; i < hStructure.size() - 1; i++) {
+
+            // Combine all local fuzzy weights into ArrayList 'localLayer'
+            ArrayList<SimpleMatrix> localLayer = new ArrayList<>(2);
+            SimpleMatrix localLayerL = hStructure.get(i).get(0).getFuzzyLocalWeights().get(W_L);
+            SimpleMatrix localLayerU = hStructure.get(i).get(0).getFuzzyLocalWeights().get(W_U);
+            for (int j = 1; j < hStructure.get(i).size(); j++) {
+                localLayerL = localLayerL.combine(0, localLayerL.numCols(), hStructure.get(i).get(j).getFuzzyLocalWeights().get(W_L));
+                localLayerU = localLayerU.combine(0, localLayerU.numCols(), hStructure.get(i).get(j).getFuzzyLocalWeights().get(W_U));
+            }
+            localLayer.add(W_L, localLayerL);
+            localLayer.add(W_U, localLayerU);
+
+            // Combine all global weights into ArrayList weightsCriteria
+            ArrayList<SimpleMatrix> weightsCriteria = new ArrayList<>(2);
+            SimpleMatrix criteriaL = new SimpleMatrix(hStructure.get(i).size(), 1);
+            SimpleMatrix criteriaU = new SimpleMatrix(hStructure.get(i).size(), 1);
+            for (int j = 0; j < hStructure.get(i).size(); j++) {
+                criteriaL.set(j, hStructure.get(i).get(j).getFuzzyGlobalWeight().get(W_L));
+                criteriaU.set(j, hStructure.get(i).get(j).getFuzzyGlobalWeight().get(W_U));
+            }
+            weightsCriteria.add(W_L, criteriaL);
+            weightsCriteria.add(W_U, criteriaU);
+
+            // Find global fuzzy weights for level
+            ArrayList<SimpleMatrix> fuzzyGlobal = fuzzyGlobalWeightsAlg.computeFuzzyGlobal(weightsCriteria, localLayer);
+
+            // Set global fuzzy weights for nodes
+            for (int j = 0; j < hStructure.get(i + 1).size(); j++) {
+                hStructure.get(i + 1).get(j).setFuzzyGlobalWeight(fuzzyGlobal.get(W_L).get(j), fuzzyGlobal.get(W_U).get(j));
+            }
+        }
+    }
+
+    public ArrayList<SimpleMatrix> getLayerFuzzyGlobalWeights(int layer) {
+        if (layer < 0 || layer >= hStructure.size()) {
+            throw new IndexOutOfBoundsException("Incorrect layer index");
+        }
+        ArrayList<Node> hLayer = hStructure.get(layer);
+        ArrayList<SimpleMatrix> fuzzyGlobal = new ArrayList<>(2);
+        SimpleMatrix globalL = new SimpleMatrix(hLayer.size(), 1);
+        SimpleMatrix globalU = new SimpleMatrix(hLayer.size(), 1);
+        for (int i = 0; i < hLayer.size(); i++) {
+            globalL.set(i, hLayer.get(i).getFuzzyGlobalWeight().get(0));
+            globalU.set(i, hLayer.get(i).getFuzzyGlobalWeight().get(1));
+        }
+        fuzzyGlobal.add(0, globalL);
+        fuzzyGlobal.add(1, globalU);
+        return fuzzyGlobal;
+    }
+
 //
 //    public int getNumLayers() {
 //        return hStructure.size();

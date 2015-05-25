@@ -11,6 +11,7 @@ public class GPM implements FuzzyLocalWeightsAlg {
     private int[] colNum;
     private double[] row;
 
+    @Override
     public ArrayList<SimpleMatrix> computeFuzzyLocal(ArrayList<SimpleMatrix> fuzzyPairComparisons) {
         /**
          * Dimension of matrices and weights vector
@@ -188,6 +189,8 @@ public class GPM implements FuzzyLocalWeightsAlg {
             lp.getVariables(row);
             for(int j = 0; j < numCols; j++)
                 System.out.println(lp.getColName(j + 1) + ": " + row[j]);
+
+            lp.deleteLp();
 
             SimpleMatrix wl = new SimpleMatrix(n, 1);
             SimpleMatrix wm = new SimpleMatrix(n, 1);

@@ -124,9 +124,14 @@ public class Node {
         this.fuzzyGlobalWeight = fuzzyGlobalWeight;
     }
 
-    public void setFuzzyGlobalWeight(double globalWeightL, double globalWeightM, double globalWeightU) {
-        this.fuzzyGlobalWeight.add(0, globalWeightL);
-        this.fuzzyGlobalWeight.add(1, globalWeightM);
-        this.fuzzyGlobalWeight.add(2, globalWeightU);
+    public void setFuzzyGlobalWeight(double globalWeightL, double globalWeightU) {
+        if (this.fuzzyGlobalWeight == null) {
+            this.fuzzyGlobalWeight = new ArrayList<>(2);
+            for (int i = 0; i < 2; i++) {
+                this.fuzzyGlobalWeight.add(i, null);
+            }
+        }
+        this.fuzzyGlobalWeight.set(0, globalWeightL);
+        this.fuzzyGlobalWeight.set(1, globalWeightU);
     }
 }

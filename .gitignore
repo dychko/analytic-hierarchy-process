@@ -4,5 +4,6 @@ Results.txt
 model.lp
 analytic-hierarchy-process.iml
 src/Demo.java
-src/fuzzyGlobal
 src/fuzzyLocal/FuzzyTest.java
+global-model-l.lp
+global-model-u.lp

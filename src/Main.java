@@ -1,3 +1,4 @@
+import fuzzyGlobal.FuzzyDistributedSynthesis;
 import fuzzyLocal.GPM;
 import globalMethods.DistributedSynthesis;
 import globalMethods.GlobalWeightsAlg;
@@ -131,6 +132,17 @@ public class Main {
                 writer.println(weights.get(2));
             }
         }
+
+        writer.println("Fuzzy global weights");
+        writer.println("Fuzzy Distributed synthesis");
+
+        mHierarchy.computeAllFuzzyGlobalWeights(new FuzzyDistributedSynthesis());
+
+        ArrayList<SimpleMatrix> fuzzyGlobalWeights = mHierarchy.getLayerFuzzyGlobalWeights(3);
+        writer.println("wL");
+        writer.println(fuzzyGlobalWeights.get(0));
+        writer.println("wU");
+        writer.println(fuzzyGlobalWeights.get(1));
 
         writer.close();
 
