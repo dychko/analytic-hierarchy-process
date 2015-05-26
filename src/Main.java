@@ -3,6 +3,8 @@ import fuzzyGlobal.FuzzyGlobalWeightsAlg;
 import fuzzyLocal.FRGMM;
 import fuzzyLocal.FuzzyLocalWeightsAlg;
 import fuzzyLocal.GPM;
+import fuzzyRanging.DegreeOfPreference;
+import fuzzyRanging.FuzzyRangingAlg;
 import globalMethods.DistributedSynthesis;
 import globalMethods.GlobalWeightsAlg;
 import globalMethods.MultiplicativeSynthesis;
@@ -126,6 +128,9 @@ public class Main {
         ArrayList<FuzzyGlobalWeightsAlg> fuzzyGlobalWeightsAlgs = new ArrayList<>();
         fuzzyGlobalWeightsAlgs.add(new FuzzyDistributedSynthesis());
 
+        ArrayList<FuzzyRangingAlg> fuzzyRangingAlgs = new ArrayList<>();
+        fuzzyRangingAlgs.add(new DegreeOfPreference());
+
         for (FuzzyLocalWeightsAlg fuzzyLocalWeightsAlg : fuzzyLocalWeightsAlgs) {
             mHierarchy.computeAllFuzzyLocalWeights(fuzzyLocalWeightsAlg);
 
@@ -153,6 +158,14 @@ public class Main {
                 writer.println("wU");
                 writer.println(fuzzyGlobalWeights.get(1));
 
+
+                writer.println("Ranging");
+                for (FuzzyRangingAlg fuzzyRangingAlg : fuzzyRangingAlgs) {
+                    ArrayList<Integer> ranging = fuzzyRangingAlg.fuzzyRanging(fuzzyGlobalWeights);
+
+                    writer.println(fuzzyRangingAlg.getName());
+                    writer.println(ranging);
+                }
             }
         }
 

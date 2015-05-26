@@ -7,3 +7,4 @@ src/Demo.java
 src/fuzzyLocal/FuzzyTest.java
 global-model-l.lp
 global-model-u.lp
+src/fuzzyRanging/RangingTest.java
