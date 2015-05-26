@@ -112,7 +112,7 @@ public class Main {
             }
         }
 
-        
+
         // Fuzzy computations
 
         String pathFuzzy = "C:\\users\\admin\\desktop\\generated\\fuzzy\\full\\";
