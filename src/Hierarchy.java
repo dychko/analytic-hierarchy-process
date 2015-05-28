@@ -9,10 +9,6 @@ import java.util.ArrayList;
 public class Hierarchy {
     private ArrayList<ArrayList<Node>> hStructure;
 
-//    public Hierarchy() {
-//
-//    }
-
     /**
      * Build hierarchy with Goal on 1-st level and with number of elements,
      * corresponding to the 'elements' array
@@ -55,7 +51,6 @@ public class Hierarchy {
             pairComparisons.numCols() != hStructure.get(layer).size()) {
             throw new IndexOutOfBoundsException("Matrix has incorrect dimensions");
         }
-        // TODO: Better check for pairComparison matrix might be needed
         hStructure.get(layer - 1).get(element).setPairComparisons(pairComparisons);
     }
 
@@ -294,23 +289,6 @@ public class Hierarchy {
         fuzzyGlobal.add(1, globalU);
         return fuzzyGlobal;
     }
-
-//
-//    public int getNumLayers() {
-//        return hStructure.size();
-//    }
-//
-//    public int getNumElementsPerLayer(int layer) {
-//        return hStructure.get(layer).size();
-//    }
-//
-//    public void setLayers(int numLayers) {
-//        hStructure = new ArrayList<>(numLayers);
-//    }
-//
-//    public void setElementsPerLayer(int layer, int numElements) {
-//        hStructure.set(layer, new ArrayList<>(numElements));
-//    }
 
     public void checkElementLayer(int layer, int element) {
         if (layer <= 0 || layer >= hStructure.size()) {
